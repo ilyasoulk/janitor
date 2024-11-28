@@ -1,0 +1,17 @@
+{
+  "name": "janitor",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "dependencies": {
+    "@xenova/transformers": "^2.15.1"
+  },
+  "description": "",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
