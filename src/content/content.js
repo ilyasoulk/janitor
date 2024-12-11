@@ -1,88 +1,31 @@
 async function cleanSelectedText(selection) {
     const originalText = selection.toString();
-    let loadingIndicator;
-
-    console.log('[CONTENT] Starting text cleaning process');
-    console.log('[CONTENT] Selected text:', originalText);
+    if (!originalText) return;
 
     try {
-        const originalRange = selection.getRangeAt(0).cloneRange();
-        
-        loadingIndicator = showLoadingIndicator(selection);
-        
-        console.log('[CONTENT] Sending message to background script');
-        try {
-            const response = await chrome.runtime.sendMessage({
-                type: 'CLEAN_TEXT',
-                text: originalText
-            });
-            
-            console.log('[CONTENT] Received response from background:', response);
-            
-            if (response.error) {
-                console.error('[CONTENT] Error in response:', response.error);
-                throw new Error(response.error);
-            }
+        const response = await chrome.runtime.sendMessage({
+            type: 'CLEAN_TEXT',
+            text: originalText
+        });
 
-            if (loadingIndicator && loadingIndicator.parentNode) {
-                loadingIndicator.remove();
-            }
-
-            console.log('[CONTENT] Replacing text with:', response.cleanedText);
-            
-            selection.removeAllRanges();
-            selection.addRange(originalRange);
-            
+        if (response?.cleanedText) {
             const range = selection.getRangeAt(0);
             range.deleteContents();
-            const textNode = document.createTextNode(response.cleanedText);
-            range.insertNode(textNode);
-            
-            selection.removeAllRanges();
-        } catch (err) {
-            console.error('[CONTENT] Message sending failed:', err);
-            if (loadingIndicator && loadingIndicator.parentNode) {
-                loadingIndicator.replaceWith(document.createTextNode(originalText));
-            }
-            alert('Failed to clean text. Please try reloading the page.');
+            range.insertNode(document.createTextNode(response.cleanedText));
+            window.getSelection().removeAllRanges();
         }
     } catch (error) {
-        console.error('[CONTENT] Error in cleanSelectedText:', error);
-        if (loadingIndicator && loadingIndicator.parentNode) {
-            loadingIndicator.replaceWith(document.createTextNode(originalText));
-        }
+        console.error('Failed to clean text:', error);
     }
 }
 
-function showLoadingIndicator(selection) {
-    const range = selection.getRangeAt(0).cloneRange();
-    const loadingSpan = document.createElement('span');
-    loadingSpan.textContent = 'Anonymizing...';
-    loadingSpan.id = 'anonymization-loading';
-    loadingSpan.style.backgroundColor = '#f0f0f0';
-    loadingSpan.style.padding = '2px 4px';
-    loadingSpan.style.borderRadius = '3px';
-    
-    range.deleteContents();
-    range.insertNode(loadingSpan);
-    
-    return loadingSpan;
-}
-
-// Listen for messages from the background script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log('[CONTENT] Received message:', message);
-    
+chrome.runtime.onMessage.addListener((message) => {
     if (message.command === "cleanSelection") {
-        console.log('[CONTENT] Processing cleanSelection command');
         const selection = window.getSelection();
-        if (selection.toString().length > 0) {
+        if (selection?.toString().length > 0) {
             cleanSelectedText(selection);
-        } else {
-            console.log('[CONTENT] No text selected');
         }
     }
 });
 
-// Add initialization log
 console.log('[CONTENT] Content script loaded');

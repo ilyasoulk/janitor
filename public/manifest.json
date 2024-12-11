@@ -21,12 +21,8 @@
         ],
         "js": [
           "content.js"
-        ],
-        "run_at": "document_end"
+        ]
       }
-    ],
-    "host_permissions": [
-      "<all_urls>"
     ],
     "minimum_chrome_version": "92",
     "action": {
@@ -35,7 +31,8 @@
         "24": "icons/icon.png",
         "32": "icons/icon.png"
       },
-      "default_title": "Transformers.js"
+      "default_title": "Transformers.js",
+      "default_popup": "popup.html"
     },
     "content_security_policy": {
       "extension_pages": "script-src 'self' 'wasm-unsafe-eval'"
@@ -46,5 +43,3 @@
       "128": "icons/icon.png"
     }
   }
-
-
