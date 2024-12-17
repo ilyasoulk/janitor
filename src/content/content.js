@@ -2,6 +2,8 @@ async function cleanSelectedText(selection) {
     const originalText = selection.toString();
     if (!originalText) return;
 
+    showLoadingIndicator(selection);
+
     try {
         const response = await chrome.runtime.sendMessage({
             type: 'CLEAN_TEXT',
@@ -17,6 +19,12 @@ async function cleanSelectedText(selection) {
     } catch (error) {
         console.error('Failed to clean text:', error);
     }
+}
+
+function showLoadingIndicator(selection) {
+    const range = selection.getRangeAt(0)
+    range.deleteContents();
+    range.insertNode(document.createTextNode("Anonymizing..."));
 }
 
 chrome.runtime.onMessage.addListener((message) => {
