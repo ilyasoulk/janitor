@@ -1,22 +1,22 @@
 export const TEST_INPUTS = [
-    "My name is John Smith and I work at Google in New York",
-    "Contact Sarah Johnson at sarah.johnson@microsoft.com",
-    "David from Apple visited our office in Paris",
-    "Email me at john.smith82@google.com or david.wilson@facebook.com",
-    "Contact: sin-markoov@company.com",
-    "John and Sarah from Microsoft met David from Google in London",
-    "The Apple office in Paris contacted Michael from the New York branch",
-    "John sent an email to john.smith@google.com about the Google project",
+    "My name is Alex Chen and I work at Oracle in San Francisco",
+    "Ryan from Dell visited our office in Beijing",
+    "Alex and Emily from IBM met Ryan from Dell in Tokyo",
+    "The Dell office in Beijing contacted Alexander from the San Francisco branch",
+    "Alex sent an email to alex.lee@oracle.com about the Oracle project",
+    "The best restaurant in the world is located in Beijing, China",
+    "The Big Ben is a historic landmark",
+
+    // Mail cases
+    "Contact Emily Patel at emily.patel@ibm.com",
+    "Email me at alex.lee@oracle.com or ryan.kim@twitter.com",
+    "Contact: alexander.kuznetsov@oracle.com",
+    "alex.lee.developer@oracle.com and lee.alex@ibm.com are both Alex",
+
+    // Harder Cases
+    "Gabriel Attal was the Prime Minister of France",
+    "The Louvre is a famous building in France",
     "JOHN SMITH works at GOOGLE",
-    "john.smith.developer@google.com and smith.john@microsoft.com are both John",
-    "Barack Obama was the president of the United States",
-    "The Eiffel Tower is located in Paris, France",
-    "Amazon's headquarters are in Seattle, Washington",
-    "The Great Wall of China is a historic landmark",
-    "Angela Merkel was the Chancellor of Germany",
-    "The Sydney Opera House is a famous building in Australia",
-    "Mount Everest is the highest mountain in the world",
-    "The Mona Lisa is displayed in the Louvre Museum in Paris",
     "Tesla, founded by Elon Musk, is based in Palo Alto",
-    "The River Nile flows through Egypt and Sudan"
+    "Dylan's office is near Lourmel station",
 ];
