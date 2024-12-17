@@ -26,7 +26,7 @@ export const cleanPrompt = async (text) => {
     // Replace entities with placeholders
     let cleanedText = text;
     entities.forEach(entity => {
-        if (entity.entity.startsWith('B-')) {
+        if (entity.entity.startsWith('B-') || entity.entity.startsWith('I-')) {
             const entityType = entity.entity.slice(2);
             const word = text.split(/\s+/)[entity.index - 1];
             if (word) {

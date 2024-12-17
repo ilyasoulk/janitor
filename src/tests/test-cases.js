@@ -8,5 +8,15 @@ export const TEST_INPUTS = [
     "The Apple office in Paris contacted Michael from the New York branch",
     "John sent an email to john.smith@google.com about the Google project",
     "JOHN SMITH works at GOOGLE",
-    "john.smith.developer@google.com and smith.john@microsoft.com are both John"
+    "john.smith.developer@google.com and smith.john@microsoft.com are both John",
+    "Barack Obama was the president of the United States",
+    "The Eiffel Tower is located in Paris, France",
+    "Amazon's headquarters are in Seattle, Washington",
+    "The Great Wall of China is a historic landmark",
+    "Angela Merkel was the Chancellor of Germany",
+    "The Sydney Opera House is a famous building in Australia",
+    "Mount Everest is the highest mountain in the world",
+    "The Mona Lisa is displayed in the Louvre Museum in Paris",
+    "Tesla, founded by Elon Musk, is based in Palo Alto",
+    "The River Nile flows through Egypt and Sudan"
 ];
