@@ -11,7 +11,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
-    "test:anonymizer": "node src/tests/anonymizer.test.js"
+    "test:anonymizer": "node src/tests/anonymizer.test.js",
+    "zip": "rm text_anonymizer_extension.zip && zip -r text_anonymizer_extension.zip build/"
   },
   "dependencies": {
     "@xenova/transformers": "^2.17.2"
