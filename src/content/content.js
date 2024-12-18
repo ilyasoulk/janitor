@@ -2,7 +2,7 @@ async function cleanSelectedText(selection, anonymize = true) {
     const originalText = selection.toString();
     if (!originalText) return;
 
-    showLoadingIndicator(selection);
+    showLoadingIndicator(selection, anonymize);
 
     try {
         const response = await chrome.runtime.sendMessage({
@@ -22,10 +22,10 @@ async function cleanSelectedText(selection, anonymize = true) {
     }
 }
 
-function showLoadingIndicator(selection) {
+function showLoadingIndicator(selection, anonymize) {
     const range = selection.getRangeAt(0)
     range.deleteContents();
-    range.insertNode(document.createTextNode("Anonymizing..."));
+    range.insertNode(document.createTextNode(anonymize ? "Anonymizing..." : "Identifying..."));
 }
 
 chrome.runtime.onMessage.addListener((message) => {
