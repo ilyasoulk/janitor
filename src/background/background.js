@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "cleanSelection",
-        title: "Anonymize Selection",
+        title: "Pseudonymize Selection",
         contexts: ["selection"]
     });
 });
@@ -32,7 +32,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "identifySelection",
-        title: "Identify Selection",
+        title: "Anonymize Selection",
         contexts: ["selection"]
     });
 });
