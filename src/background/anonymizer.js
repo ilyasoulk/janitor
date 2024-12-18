@@ -55,7 +55,7 @@ const isNonIntermediatePersonEntity = entityType => entityType.startsWith("I-") 
 
 
 // Text cleaning function
-export const cleanPrompt = async (text) => {
+export const cleanPrompt = async (text, anonymize = true) => {
     const nerPipeline = await PipelineSingleton.getInstance();
     const entities = await nerPipeline(text) 
     const aggregatedEntities = aggregateEntities(entities)
@@ -67,6 +67,13 @@ export const cleanPrompt = async (text) => {
         const word = entity.word;
 
         if (!word) return;
+
+        if (!anonymize) 
+        {
+            cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), `[${entityType}]`);
+            return
+        }
+
 
         if (replacementDict[word]) 
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), replacementDict[word]);
@@ -84,8 +91,17 @@ export const cleanPrompt = async (text) => {
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), `[${entityType}]`);
     });
 
+
+
+
     // Handle emails with regex
     const emailRegex = /([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})/g;
+
+
+    if (!anonymize) 
+        return cleanedText.replace(emailRegex, `[EMAIL]`)
+
+
     return cleanedText.replace(emailRegex, (match, username, domain, tld) => {
         let changed = false;
 

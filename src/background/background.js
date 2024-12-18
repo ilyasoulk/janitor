@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'CLEAN_TEXT') {
         (async () => {
             try {
-                const cleanedText = await cleanPrompt(request.text);
+                const cleanedText = await cleanPrompt(request.text, request.anonymize);
                 sendResponse({ cleanedText });
             } catch (error) {
                 sendResponse({ error: error.message });
@@ -28,9 +28,18 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
+
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        id: "identifySelection",
+        title: "Identify Selection",
+        contexts: ["selection"]
+    });
+});
+
 // Context menu handler
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === "cleanSelection") {
+    if (info.menuItemId === "cleanSelection" || info.menuItemId === "identifySelection") {
         try {
             // Check if we can access the tab
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -41,7 +50,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
             // Send message with error handling
             try {
-                await chrome.tabs.sendMessage(tab.id, { command: "cleanSelection" });
+                await chrome.tabs.sendMessage(tab.id, { command: info.menuItemId  });
             } catch (error) {
                 // If content script isn't ready, inject it
                 if (error.message.includes('Receiving end does not exist')) {
@@ -51,7 +60,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                         files: ['content.js']
                     });
                     // Try sending the message again
-                    await chrome.tabs.sendMessage(tab.id, { command: "cleanSelection" });
+                    await chrome.tabs.sendMessage(tab.id, { command: info.menuItemId  });
                 } else {
                     console.error('[BACKGROUND] Error sending message:', error);
                 }
