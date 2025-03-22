@@ -20,7 +20,7 @@ const config = {
         new CopyPlugin({
             patterns: [
                 {
-                    from: "public",
+                    from: "src",
                     to: "." // Copies to build folder
                 },
             ],

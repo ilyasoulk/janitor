@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "SkyShade - Text Anonymizer",
-    "version": "1.0",
+    "version": "1.5",
     "description": "Anonymizes selected text by replacing named entities with generic labels",
     "permissions": [
       "activeTab",

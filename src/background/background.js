@@ -92,8 +92,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (tabs.length === 0) 
                     throw new Error('No active tab found');
 
-                await ensureContentScriptLoaded(tab[0].id);
-                const result = await chrome.tabs.sendMessage(tab[0].id, { command: "anonymizeSelection" });
+                await ensureContentScriptLoaded(tabs[0].id);
+                const result = await chrome.tabs.sendMessage(tabs[0].id, { command: "anonymizeSelection" });
                 sendResponse(result);
             } 
             catch (error) {
