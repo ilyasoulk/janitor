@@ -18,9 +18,9 @@ self.addEventListener('install', () => {
 // Context menu setup
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
-        id: "anonymizeSelection",
-        title: "Anonymize Selection",
-        contexts: ["selection"]
+        id: 'anonymizeSelection',
+        title: 'Anonymize Selection',
+        contexts: ['selection'],
     });
 });
 
@@ -40,7 +40,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // Helper function to ensure content script is loaded
 async function ensureContentScriptLoaded(tabId) {
     try {
-        await chrome.tabs.sendMessage(tabId, { action: "ping" });
+        await chrome.tabs.sendMessage(tabId, { action: 'ping' });
     } 
     catch (error) 
     {
@@ -57,11 +57,11 @@ async function ensureContentScriptLoaded(tabId) {
 
 // Context menu handler
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId !== "anonymizeSelection") return;
+    if (info.menuItemId !== 'anonymizeSelection') return;
 
     try {
         await ensureContentScriptLoaded(tab.id);
-        await chrome.tabs.sendMessage(tab.id, { command: "anonymizeSelection" });
+        await chrome.tabs.sendMessage(tab.id, { command: 'anonymizeSelection' });
     } 
     catch (error) {
         console.error('[SkyShade] [BACKGROUND] Error in context menu handler:', error);
@@ -93,7 +93,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     throw new Error('No active tab found');
 
                 await ensureContentScriptLoaded(tabs[0].id);
-                const result = await chrome.tabs.sendMessage(tabs[0].id, { command: "anonymizeSelection" });
+                const result = await chrome.tabs.sendMessage(tabs[0].id, { command: 'anonymizeSelection' });
                 sendResponse(result);
             } 
             catch (error) {

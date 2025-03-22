@@ -5,10 +5,10 @@ env.allowLocalModels = false;
 env.backends.onnx.wasm.numThreads = 1;
 
 const DEFAULT_VALUES_ENTITIES = {
-    "B-PER": ['John', 'Mary', 'Sarah', 'Michael', 'David', 'Emma', 'James', 'Sophie'],
-    "I-PER": ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis'],
-    "B-ORG": ['Google', 'Microsoft', 'Apple', 'Facebook', 'Amazon', 'Twitter'],
-    "B-LOC": ['New York', 'Paris', 'London', 'Tokyo', 'Berlin', 'Alger', 'Limoges', 'Bordeaux', 'Grenoble'],
+    'B-PER': ['John', 'Mary', 'Sarah', 'Michael', 'David', 'Emma', 'James', 'Sophie'],
+    'I-PER': ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis'],
+    'B-ORG': ['Google', 'Microsoft', 'Apple', 'Facebook', 'Amazon', 'Twitter'],
+    'B-LOC': ['New York', 'Paris', 'London', 'Tokyo', 'Berlin', 'Alger', 'Limoges', 'Bordeaux', 'Grenoble'],
 };
 
 const replacementDict = {};
@@ -29,36 +29,36 @@ class PipelineSingleton {
 
 // Aggregates entities with the same type
 function aggregateEntities(nerResults) {
-  let currentEntity = null;
-  let aggregatedEntities = [];
+    let currentEntity = null;
+    let aggregatedEntities = [];
 
-  for (const entity of nerResults) {
-    if (entity.word.startsWith('##') && currentEntity) {
-      currentEntity.word += entity.word.substring(2); 
-      continue
-    } 
+    for (const entity of nerResults) {
+        if (entity.word.startsWith('##') && currentEntity) {
+            currentEntity.word += entity.word.substring(2); 
+            continue;
+        } 
+
+        if (currentEntity) 
+            aggregatedEntities.push(currentEntity);
+
+        currentEntity = { type: entity.entity, word: entity.word };
+    }
 
     if (currentEntity) 
         aggregatedEntities.push(currentEntity);
 
-    currentEntity = { type: entity.entity, word: entity.word }
-  }
-
-  if (currentEntity) 
-    aggregatedEntities.push(currentEntity);
-
-  return aggregatedEntities;
+    return aggregatedEntities;
 }
 
 
-const isNonIntermediatePersonEntity = entityType => entityType.startsWith("I-") && entityType !== "PER";
+const isNonIntermediatePersonEntity = entityType => entityType.startsWith('I-') && entityType !== 'PER';
 
 
 // Text cleaning function
 export const cleanPrompt = async (text, anonymize = true) => {
     const nerPipeline = await PipelineSingleton.getInstance();
-    const entities = await nerPipeline(text) 
-    const aggregatedEntities = aggregateEntities(entities)
+    const entities = await nerPipeline(text); 
+    const aggregatedEntities = aggregateEntities(entities);
 
     // Replace entities with placeholders
     let cleanedText = text;
@@ -71,7 +71,7 @@ export const cleanPrompt = async (text, anonymize = true) => {
         if (anonymize) 
         {
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), `[${entityType}]`);
-            return
+            return;
         }
 
 
@@ -83,8 +83,8 @@ export const cleanPrompt = async (text, anonymize = true) => {
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), '');
 
         else if (DEFAULT_VALUES_ENTITIES[entity.type]) {
-            const newValue = DEFAULT_VALUES_ENTITIES[entity.type].shift()
-            replacementDict[word] = newValue
+            const newValue = DEFAULT_VALUES_ENTITIES[entity.type].shift();
+            replacementDict[word] = newValue;
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), newValue);
         }
         else 
@@ -99,7 +99,7 @@ export const cleanPrompt = async (text, anonymize = true) => {
 
 
     if (!anonymize) 
-        return cleanedText.replace(emailRegex, `[EMAIL]`)
+        return cleanedText.replace(emailRegex, '[EMAIL]');
 
 
     return cleanedText.replace(emailRegex, (match, username, domain, tld) => {
@@ -113,5 +113,5 @@ export const cleanPrompt = async (text, anonymize = true) => {
         }
 
         return changed ? `${username}@mail.com` : '[EMAIL]';
-    })
+    });
 };
