@@ -1,83 +1,105 @@
+// Background is the heart of the extension every process should be done from here
 import { cleanPrompt } from './anonymizer.js';
 
 // Add at the top of the file
-console.log('[BACKGROUND] Service worker starting...', new Date().toISOString());
+console.log('[SkyShade] [BACKGROUND] Service worker starting...', new Date().toISOString());
 
-// Message handlers
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === 'CLEAN_TEXT') {
-        (async () => {
-            try {
-                const cleanedText = await cleanPrompt(request.text, request.anonymize);
-                sendResponse({ cleanedText });
-            } catch (error) {
-                sendResponse({ error: error.message });
-            }
-        })();
-        return true;
-    }
-    
+// Add service worker activation handling
+self.addEventListener('activate', () => {
+    console.log('[SkyShade] [BACKGROUND] Service worker activated');
+});
+
+// Add service worker installation handling
+self.addEventListener('install', () => {
+    console.log('[SkyShade] [BACKGROUND] Service worker installed');
+    self.skipWaiting(); // Ensures the service worker activates immediately
 });
 
 // Context menu setup
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
-        id: "cleanSelection",
+        id: "anonymizeSelection",
         title: "Anonymize Selection",
         contexts: ["selection"]
     });
 });
 
-
+/*
+// We are not pseudonymizing for now
+// Context menu setup
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
-        id: "identifySelection",
-        title: "Identify Selection",
+        id: "pseudonymizeSelection",
+        title: "Pseudonymize Selection",
         contexts: ["selection"]
     });
 });
+*/
+
+
+// Helper function to ensure content script is loaded
+async function ensureContentScriptLoaded(tabId) {
+    try {
+        await chrome.tabs.sendMessage(tabId, { action: "ping" });
+    } 
+    catch (error) 
+    {
+        if (error.message.includes('Receiving end does not exist')) {
+            console.log('[SkyShade] [BACKGROUND] Content script not ready, injecting...');
+            await chrome.scripting.executeScript({ target: { tabId },  files: ['content.js'] });
+            await new Promise(resolve => setTimeout(resolve, 100));
+        } 
+        else 
+            throw error;
+    }
+}
+
 
 // Context menu handler
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === "cleanSelection" || info.menuItemId === "identifySelection") {
-        try {
-            // Check if we can access the tab
-            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length === 0) {
-                console.error('[BACKGROUND] No active tab found');
-                return;
-            }
+    if (info.menuItemId !== "anonymizeSelection") return;
 
-            // Send message with error handling
-            try {
-                await chrome.tabs.sendMessage(tab.id, { command: info.menuItemId  });
-            } catch (error) {
-                // If content script isn't ready, inject it
-                if (error.message.includes('Receiving end does not exist')) {
-                    console.log('[BACKGROUND] Content script not ready, injecting...');
-                    await chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        files: ['content.js']
-                    });
-                    // Try sending the message again
-                    await chrome.tabs.sendMessage(tab.id, { command: info.menuItemId  });
-                } else {
-                    console.error('[BACKGROUND] Error sending message:', error);
-                }
-            }
-        } catch (error) {
-            console.error('[BACKGROUND] Error in context menu handler:', error);
-        }
+    try {
+        await ensureContentScriptLoaded(tab.id);
+        await chrome.tabs.sendMessage(tab.id, { command: "anonymizeSelection" });
+    } 
+    catch (error) {
+        console.error('[SkyShade] [BACKGROUND] Error in context menu handler:', error);
     }
 });
 
-// Add service worker activation handling
-self.addEventListener('activate', (event) => {
-    console.log('[BACKGROUND] Service worker activated');
-});
+// Message handlers
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // Handle direct text cleaning requests
+    if (request.type === 'CLEAN_TEXT') 
+    {
+        (async () => {
+            try {
+                const cleanedText = await cleanPrompt(request.text, request.anonymizing);
+                sendResponse({ cleanedText });
+            } catch (error) { 
+                sendResponse({ error: error.message }); 
+            }
+        })();
+        return true;
+    }
+    
+    // Handle anonymize selection requests from popup
+    if (request.action === 'ANONYMIZE_SELECTION') {
+        (async () => {
+            try {
+                const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+                if (tabs.length === 0) 
+                    throw new Error('No active tab found');
 
-// Add service worker installation handling
-self.addEventListener('install', (event) => {
-    console.log('[BACKGROUND] Service worker installed');
-    self.skipWaiting(); // Ensures the service worker activates immediately
+                await ensureContentScriptLoaded(tab[0].id);
+                const result = await chrome.tabs.sendMessage(tab[0].id, { command: "anonymizeSelection" });
+                sendResponse(result);
+            } 
+            catch (error) {
+                sendResponse({ success: false, error: error.message });
+            }
+        })();
+        return true;
+    }
 });

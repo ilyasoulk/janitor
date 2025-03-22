@@ -68,7 +68,7 @@ export const cleanPrompt = async (text, anonymize = true) => {
 
         if (!word) return;
 
-        if (!anonymize) 
+        if (anonymize) 
         {
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), `[${entityType}]`);
             return
