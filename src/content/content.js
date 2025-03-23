@@ -32,10 +32,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const response = await chrome.runtime.sendMessage({ 
                 type: 'CLEAN_TEXT', text: originalText, anonymizing: isAnonymizing });
 
-            if (response?.cleanedText) 
-            {
+            if (response?.cleanedText) {
                 replaceSelectedText(selection, response.cleanedText);
-                sendResponse({ success: true });
+                sendResponse({ success: true, message: response.message });
             } 
             else 
                 sendResponse({ success: false, error: response?.error || 'Failed to process text'});

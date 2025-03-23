@@ -1,13 +1,15 @@
 {
     "manifest_version": 3,
     "name": "SkyShade - Text Anonymizer",
-    "version": "1.5",
+    "version": "1.7",
     "description": "Anonymizes selected text by replacing named entities with generic labels",
     "permissions": [
       "activeTab",
       "scripting",
       "contextMenus",
-      "storage"
+      "storage",
+      "windows"
+      
     ],
     "background": {
       "service_worker": "background.js",
@@ -21,7 +23,7 @@
         "32": "icons/icon.png"
       },
       "default_title": "Transformers.js",
-      "default_popup": "../popup/popup.html"
+      "default_popup": "../ui/popup.html"
     },
     "content_security_policy": {
       "extension_pages": "script-src 'self' 'wasm-unsafe-eval'"
@@ -30,5 +32,20 @@
       "16": "icons/icon.png",
       "48": "icons/icon.png",
       "128": "icons/icon.png"
-    }
-  }
+    },
+    "commands": {
+      "_execute_action": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+Y",
+          "mac": "Command+Shift+Y"
+        },
+        "description": "Open SkyShade extension"
+      }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["help.html", "help.css"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+}

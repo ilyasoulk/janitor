@@ -20,11 +20,15 @@ const config = {
         new CopyPlugin({
             patterns: [
                 {
-                    from: "src",
-                    to: "." // Copies to build folder
+                    from: 'manifest.json',
+                    to: '.',
+                },
+                {
+                    from: 'src',
+                    to: '.', // Copies to build folder
                 },
             ],
-        })
+        }),
     ],
 };
 

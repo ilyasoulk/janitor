@@ -42,8 +42,7 @@ async function ensureContentScriptLoaded(tabId) {
     try {
         await chrome.tabs.sendMessage(tabId, { action: 'ping' });
     } 
-    catch (error) 
-    {
+    catch (error) {
         if (error.message.includes('Receiving end does not exist')) {
             console.log('[SkyShade] [BACKGROUND] Content script not ready, injecting...');
             await chrome.scripting.executeScript({ target: { tabId },  files: ['content.js'] });
@@ -71,13 +70,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 // Message handlers
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Handle direct text cleaning requests
-    if (request.type === 'CLEAN_TEXT') 
-    {
+    if (request.type === 'CLEAN_TEXT') {
         (async () => {
             try {
                 const cleanedText = await cleanPrompt(request.text, request.anonymizing);
-                sendResponse({ cleanedText });
-            } catch (error) { 
+                sendResponse({ cleanedText, message: cleanedText === request.text ? 'Nothing to anonymize was found' : 'Text anonymized' });
+            }
+            catch (error) { 
                 sendResponse({ error: error.message }); 
             }
         })();
@@ -97,7 +96,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(result);
             } 
             catch (error) {
-                sendResponse({ success: false, error: error.message });
+                console.error('[SkyShade] [BACKGROUND] Error in message handler:', error);
+                if (error.message.includes('Cannot access a chrome:// URL'))
+                    sendResponse({ success: false, error: 'Not a valid page' });
+                else
+                    sendResponse({ success: false, error: error.message });
             }
         })();
         return true;

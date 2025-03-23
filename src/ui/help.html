@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyShade - Help</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="help.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="../icons/icon.png" alt="SkyShade Logo" class="logo-icon">
+        <h1>SkyShade Help</h1>
+      </div>
+    </header>
+    
+    <div class="content">
+      <div class="help-section">
+        <h2>Getting Started</h2>
+        <p>SkyShade is a text anonymization tool that helps you quickly remove or replace personally identifiable information in text. Here's how to use it:</p>
+        
+        <ol>
+          <li><strong>Anonymize text on a webpage:</strong> Select text on any webpage, click the SkyShade icon, and click "Anonymize Selection".</li>
+          <li><strong>Anonymize your own text:</strong> Open the extension, paste text in the input box, and click "Anonymize Text".</li>
+          <li><strong>Copy results:</strong> Click the "Copy Result" button to copy the anonymized text to your clipboard.</li>
+        </ol>
+      </div>
+      
+      <div class="help-section">
+        <h2>What Gets Anonymized</h2>
+        <p>SkyShade identifies and replaces:</p>
+        <ul>
+          <li>Names of people</li>
+          <li>Locations and places</li>
+          <li>Organizations</li>
+          <li>Email addresses</li>
+          <li>Other personally identifiable information</li>
+        </ul>
+      </div>
+      
+      <div class="help-section">
+        <h2>Tips &amp; Tricks</h2>
+        <div class="tip">
+          <p><strong>Keyboard Shortcut:</strong> Use <span class="keyboard-shortcut">Ctrl+Shift+Y</span> to quickly open SkyShade.</p>
+        </div>
+        
+        <div class="tip">
+          <p><strong>Right-Click Menu:</strong> You can also right-click on selected text and choose "Anonymize Selection" from the context menu.</p>
+        </div>
+        
+        <div class="tip">
+          <p><strong>For Large Texts:</strong> For very large texts, consider anonymizing in smaller chunks for better performance.</p>
+        </div>
+      </div>
+      
+      <div class="help-section">
+        <h2>Troubleshooting</h2>
+        <h3>Text isn't being anonymized properly</h3>
+        <p>If certain information isn't being anonymized:</p>
+        <ul>
+          <li>Try selecting a larger context (more surrounding text)</li>
+          <li>Ensure the text is in a commonly recognized format</li>
+          <li>Some specialized terminology may not be recognized as PII</li>
+        </ul>
+        
+        <h3>Extension isn't working on a page</h3>
+        <p>Some websites have restrictions that prevent extensions from accessing their content. In these cases:</p>
+        <ul>
+          <li>Copy the text and use the "Anonymize Text Input" method instead</li>
+          <li>Try refreshing the page</li>
+        </ul>
+      </div>
+      
+      <div class="help-section">
+        <h2>Contact Support</h2>
+        <div class="contact-box">
+          <p>Experiencing any unusual bugs or have suggestions for improvement? Please don't hesitate to contact the developer:</p>
+          <p class="email"><strong>Email:</strong> <a href="mailto:lyes_benacer@yahoo.fr">lyes_benacer@yahoo.fr</a></p>
+          <p>Your feedback helps make SkyShade better for everyone!</p>
+        </div>
+      </div>
+      
+      <!-- button class="back-button" id="backButton">Back to SkyShade</button -->
+    </div>
+  </div>
+  
+  <script>
+    // document.getElementById('backButton').addEventListener('click', () => {
+    //   if (window.history.length > 1) {
+    //     window.history.back();
+    //   } else {
+    //     window.close();
+    //   }
+    // });
+  </script>
+</body>
+</html> 

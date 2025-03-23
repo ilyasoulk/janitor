@@ -1,0 +1,155 @@
+:root {
+  --primary-light: #00cec9;
+  --primary: #00a8a5;
+  --primary-dark: #007f7c;
+  --secondary: #b2eded;
+  --text: #333;
+  --text-light: #666;
+  --background: #f8fbff;
+  --surface: #ffffff;
+  --error: #d32f2f;
+  --success: #388e3c;
+}
+
+body {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.container {
+  padding: 24px;
+}
+
+.content {
+  padding: 16px 0;
+}
+
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+h2 {
+  color: var(--primary-dark);
+  border-bottom: 1px solid var(--secondary);
+  padding-bottom: 10px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+h3 {
+  color: var(--text);
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.tip {
+  background-color: rgba(0, 168, 165, 0.1);
+  border-left: 4px solid var(--primary);
+  padding: 14px;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+
+.keyboard-shortcut {
+  background-color: var(--surface);
+  border: 1px solid var(--secondary);
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+ol, ul {
+  padding-left: 24px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+p {
+  line-height: 1.6;
+  margin: 12px 0;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 24px;
+}
+
+.back-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* For better mobile display */
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+  }
+}
+
+.contact-box {
+  background-color: #f0f4ff;
+  border: 1px solid #d0d9f0;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.email {
+  margin: 12px 0;
+  padding: 8px 12px;
+  background-color: white;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.email a {
+  color: #4a6ee0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.email a:hover {
+  text-decoration: underline;
+}

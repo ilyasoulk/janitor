@@ -68,8 +68,7 @@ export const cleanPrompt = async (text, anonymize = true) => {
 
         if (!word) return;
 
-        if (anonymize) 
-        {
+        if (anonymize) {
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), `[${entityType}]`);
             return;
         }
@@ -102,7 +101,7 @@ export const cleanPrompt = async (text, anonymize = true) => {
         return cleanedText.replace(emailRegex, '[EMAIL]');
 
 
-    return cleanedText.replace(emailRegex, (match, username, domain, tld) => {
+    return cleanedText.replace(emailRegex, (match, username) => {
         let changed = false;
 
         for (const [original, replacement] of Object.entries(replacementDict)) {
