@@ -50,6 +50,7 @@ async function ensureContentScriptLoaded(tabId) {
         } 
         else 
             throw error;
+        
     }
 }
 
@@ -90,6 +91,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
                 if (tabs.length === 0) 
                     throw new Error('No active tab found');
+                
 
                 await ensureContentScriptLoaded(tabs[0].id);
                 const result = await chrome.tabs.sendMessage(tabs[0].id, { command: 'anonymizeSelection' });
@@ -97,12 +99,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             } 
             catch (error) {
                 console.error('[SkyShade] [BACKGROUND] Error in message handler:', error);
-                if (error.message.includes('Cannot access a chrome:// URL'))
+                if (error.message.includes('Cannot access a chrome:// URL')) 
                     sendResponse({ success: false, error: 'Not a valid page' });
-                else
+                
+                else 
                     sendResponse({ success: false, error: error.message });
+                
             }
         })();
         return true;
     }
+});
+
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) 
+        chrome.scripting.executeScript({ target: { tabId: tabId }, files: ['content.js'] })
+            .catch(err => console.log('Content script injection failed:', err));
+    
 });

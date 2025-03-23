@@ -22,6 +22,7 @@ export default [
             'no-unused-vars': 'warn',
             'no-console': 'off',
             'comma-dangle': ['warn', 'always-multiline'],
+            'curly': ['error', 'multi'],
         },
     },
 ]; 

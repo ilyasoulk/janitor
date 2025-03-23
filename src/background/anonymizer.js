@@ -20,9 +20,9 @@ class PipelineSingleton {
     static instance = null;
 
     static async getInstance() {
-        if (this.instance === null) {
+        if (this.instance === null) 
             this.instance = await pipeline(this.task, this.model);
-        }
+        
         return this.instance;
     }
 }
@@ -40,12 +40,14 @@ function aggregateEntities(nerResults) {
 
         if (currentEntity) 
             aggregatedEntities.push(currentEntity);
+        
 
         currentEntity = { type: entity.entity, word: entity.word };
     }
 
     if (currentEntity) 
         aggregatedEntities.push(currentEntity);
+    
 
     return aggregatedEntities;
 }
@@ -76,10 +78,12 @@ export const cleanPrompt = async (text, anonymize = true) => {
 
         if (replacementDict[word]) 
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), replacementDict[word]);
+        
 
         // Multiple names entity other than name will be replaced by a one name word
         else if (isNonIntermediatePersonEntity(entityType)) 
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), '');
+        
 
         else if (DEFAULT_VALUES_ENTITIES[entity.type]) {
             const newValue = DEFAULT_VALUES_ENTITIES[entity.type].shift();
@@ -88,6 +92,7 @@ export const cleanPrompt = async (text, anonymize = true) => {
         }
         else 
             cleanedText = cleanedText.replace(new RegExp(`\\b${word}\\b`, 'g'), `[${entityType}]`);
+        
     });
 
 
@@ -99,17 +104,18 @@ export const cleanPrompt = async (text, anonymize = true) => {
 
     if (!anonymize) 
         return cleanedText.replace(emailRegex, '[EMAIL]');
+    
 
 
     return cleanedText.replace(emailRegex, (match, username) => {
         let changed = false;
 
-        for (const [original, replacement] of Object.entries(replacementDict)) {
+        for (const [original, replacement] of Object.entries(replacementDict)) 
             if (username.includes(original.toLowerCase())) {
                 username = username.replace(original.toLowerCase(), replacement.toLowerCase());
                 changed = true;
             }
-        }
+        
 
         return changed ? `${username}@mail.com` : '[EMAIL]';
     });

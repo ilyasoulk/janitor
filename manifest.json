@@ -8,8 +8,11 @@
       "scripting",
       "contextMenus",
       "storage",
-      "windows"
-      
+      "windows",
+      "tabs"
+    ],
+    "host_permissions": [
+      "<all_urls>"
     ],
     "background": {
       "service_worker": "background.js",
@@ -44,7 +47,7 @@
     },
     "web_accessible_resources": [
       {
-        "resources": ["help.html", "help.css"],
+        "resources": ["icons/*", "help.html", "help.css"],
         "matches": ["<all_urls>"]
       }
     ]

@@ -1,8 +1,8 @@
 const isExtensionContext = typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id;
 
-if (!isExtensionContext) {
+if (!isExtensionContext) 
     console.warn('Not running in extension context. Some features will be disabled.');
-}
+
 
 function savePreferences(preferences) {
     chrome.storage.sync.set(preferences);
@@ -23,23 +23,23 @@ function updateStatus(message, type = 'info', elementId = 'selectionStatus') {
         statusElement.className = 'status-message';
         // Clear text after animation completes
         setTimeout(() => {
-            if (statusElement.className === 'status-message') {
+            if (statusElement.className === 'status-message') 
                 statusElement.textContent = '';
-            }
+            
         }, 300);
     }
   
-    if (message) {
+    if (message) 
         // Auto-hide after delay
         setTimeout(() => {
             statusElement.className = 'status-message';
             setTimeout(() => {
-                if (statusElement.className === 'status-message') {
+                if (statusElement.className === 'status-message') 
                     statusElement.textContent = '';
-                }
+                
             }, 300);
         }, 3000);
-    }
+    
 }
 
 function loadPreferences(autoAnonymizeCheck) {
@@ -49,6 +49,7 @@ function loadPreferences(autoAnonymizeCheck) {
             chrome.storage.sync.get(['autoAnonymize'], function(result) {
                 autoAnonymizeCheck.checked = result.autoAnonymize || false; 
             });
+        
         else {
             console.warn('Chrome storage API not available. Using defaults preferences.');
             autoAnonymizeCheck.checked = false;
@@ -63,14 +64,17 @@ function loadPreferences(autoAnonymizeCheck) {
 async function anonymizeSelectedText() {
     if (!isExtensionContext) 
         return updateStatus('Cannot anonymize selection in non-extension context', 'error', 'selectionStatus');
+    
 
     try {
         const response = await chrome.runtime.sendMessage({ action: 'ANONYMIZE_SELECTION' });
     
         if (response && response.success) 
             updateStatus(response.message, 'success', 'selectionStatus');
+        
         else 
             updateStatus(response?.error || 'No text selected', 'error', 'selectionStatus');
+        
     } 
     catch (error) {
         console.error('Anonymization failed:', error.message);
@@ -83,9 +87,9 @@ async function anonymizeInputText(outputText, copyBtn) {
     let anonymizedResult = '';
     const inputText = document.getElementById('inputText').value.trim();
     
-    if (!inputText) {
+    if (!inputText) 
         return updateStatus('Please enter some text to anonymize', 'error', 'inputStatus');
-    }
+    
     
     if (!isExtensionContext) {
         // Fallback behavior for non-extension context
@@ -119,9 +123,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const outputText = document.getElementById('outputText');
   
 
-    if (autoAnonymizeCheck) {
+    if (autoAnonymizeCheck) 
         loadPreferences(autoAnonymizeCheck); 
-    }
+    
 
     // Event listeners for preference changes
     autoAnonymizeCheck.addEventListener('change', savePreferences);
@@ -135,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Copy result
     copyBtn.addEventListener('click', function() {
     // If we have text in the output area, copy that
-        if (outputText.textContent) {
+        if (outputText.textContent) 
             navigator.clipboard.writeText(outputText.textContent)
                 .then(() => {
                     updateStatus('Copied to clipboard', 'success', 'inputStatus');
@@ -143,23 +147,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(() => {
                     updateStatus('Failed to copy', 'error', 'inputStatus');
                 });
-        }
-        else if (isExtensionContext) {
+        
+        else if (isExtensionContext) 
             // Fall back to the content script method
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, {action: 'copyResult'}, function(response) {
-                    if (response && response.success) {
+                    if (response && response.success) 
                         updateStatus('Copied to clipboard', 'success', 'inputStatus');
-                    }
-                    else {
+                    
+                    else 
                         updateStatus('Nothing to copy', 'error', 'inputStatus');
-                    }
+                    
                 });
             });
-        }
-        else {
+        
+        else 
             updateStatus('Nothing to copy', 'error', 'inputStatus');
-        }
+        
     });
 
     // Help button
@@ -174,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const left = Math.round((screenWidth - windowWidth) / 2);
         const top = Math.round((screenHeight - windowHeight) / 2);
         
-        if (isExtensionContext) {
+        if (isExtensionContext) 
             // Open centered help window in extension context
             chrome.windows.create({
                 url: chrome.runtime.getURL('ui/help.html'),
@@ -185,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 top: top,
                 focused: true,
             });
-        }
+        
         else {
             // For non-extension context, also center the window
             const windowFeatures = `width=${windowWidth},height=${windowHeight},left=${left},top=${top}`;

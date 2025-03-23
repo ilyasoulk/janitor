@@ -10,7 +10,7 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "build": "rm src/ui/* && cp -R public/* src/ui && eslint 'src/**/*.js' --fix && webpack --config webpack.config.js",
+    "build": "rm src/ui/* && cp -R public/* src/ui && eslint 'src/**/*.js' --fix && rm -rf build && webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
     "test:anonymizer": "node src/tests/anonymizer.test.js",
     "zip": "rm text_anonymizer_extension.zip && zip -r text_anonymizer_extension.zip build/",
