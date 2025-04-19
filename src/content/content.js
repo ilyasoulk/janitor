@@ -4,6 +4,26 @@ console.log('[SkyShade] [CONTENT] Content script loaded');
 import selectionIcon from './selectionIcon.js';
 
 //-------------------------
+// ACCEPTED WEBSITES LIST
+//-------------------------
+
+// List of accepted websites where the icon and menu should appear
+const ACCEPTED_WEBSITES = [
+    'chat.openai.com',  // ChatGPT
+    'chatgpt.com',
+];
+
+// Check if current website is in the accepted list
+function isAcceptedWebsite() {
+    const hostname = window.location.hostname;
+    return ACCEPTED_WEBSITES.some(domain => hostname.includes(domain));
+}
+
+// Store the result since it won't change during page session
+const isAcceptedSite = isAcceptedWebsite();
+console.log(`[SkyShade] [CONTENT] Current site is ${isAcceptedSite ? 'accepted' : 'not accepted'} for icon/menu display`);
+
+//-------------------------
 // FUNCTION DEFINITIONS
 //-------------------------
 
@@ -39,6 +59,9 @@ function isNodeEditable(node) {
 
 // Function to update context menu visibility based on selection
 function updateContextMenuVisibility(selection) {
+    // Don't update menu if not on accepted site
+    if (!isAcceptedSite) return;
+    
     if (!selection) selection = window.getSelection();
     
     // Default to not showing the menu
@@ -57,12 +80,18 @@ function updateContextMenuVisibility(selection) {
     });
 }
 
-// Show the icon near the selection
+// Show the icon near the selection - modified to check if site is accepted
 function showSelectionIcon() {
+    // Don't show icon if not on accepted site
+    if (!isAcceptedSite) {
+        selectionIcon.hide();
+        return;
+    }
+    
     const selection = window.getSelection();
     if (!selection || selection.toString().trim().length === 0) {
         selectionIcon.hide();
-        updateContextMenuVisibility(selection); // Update menu visibility
+        updateContextMenuVisibility(selection);
         return;
     }
     
@@ -77,7 +106,6 @@ function showSelectionIcon() {
     // Update context menu visibility
     updateContextMenuVisibility(selection);
 }
-
 
 // Show loading indicator while processing
 function showLoadingIndicator(selection, anonymize) {   
@@ -159,13 +187,6 @@ function processTextTransformation(command, sendResponse) {
 }
 
 //-------------------------
-// INITIALIZATION
-//-------------------------
-
-// Set up the click handler for the icon
-selectionIcon.setClickHandler(() => processTextTransformation('anonymizeSelection', () => {}));
-
-//-------------------------
 // EVENT LISTENERS
 //-------------------------
 
@@ -187,3 +208,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return processTextTransformation(message.command, sendResponse);
 });
+
+// Set up the click handler for the icon
+selectionIcon.setClickHandler(() => processTextTransformation('anonymizeSelection', () => {}));

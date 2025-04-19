@@ -61,9 +61,40 @@ function loadPreferences(autoAnonymizeCheck) {
     }
 }
 
+const ACCEPTED_WEBSITES = [
+    'chat.openai.com',  // ChatGPT
+    'chatgpt.com',
+];
+
+// This function needs to be async since we're querying tabs
+async function isAcceptedWebsite() {
+    if (!isExtensionContext) return false;
+    
+    try {
+        // Get the active tab in the current window
+        const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+        if (!tabs || tabs.length === 0) return false;
+        
+        const tab = tabs[0];
+        const url = new URL(tab.url);
+        const hostname = url.hostname;
+        
+        console.log('Active tab hostname:', hostname);
+        return ACCEPTED_WEBSITES.some(domain => hostname.includes(domain));
+    }
+    catch (error) {
+        console.error('Error checking website:', error);
+        return false;
+    }
+}
+
+
 async function anonymizeSelectedText() {
     if (!isExtensionContext) 
         return updateStatus('Cannot anonymize selection in non-extension context', 'error', 'selectionStatus');
+
+    if (!await isAcceptedWebsite()) 
+        return updateStatus('This feature is currently only available on ChatGPT websites', 'error', 'selectionStatus');
     
 
     try {

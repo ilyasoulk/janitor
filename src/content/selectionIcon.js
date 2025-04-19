@@ -107,7 +107,7 @@ class SelectionIcon {
     }
 
     // Show the icon at specified coordinates
-    show(right, top, height = 0, bottom, centerAtTop = false) {
+    show(right, top, bottom, centerAtTop = false) {
         if (!this.icon) this.createIcon();
         
         // Calculate the final position with offsets and scroll
