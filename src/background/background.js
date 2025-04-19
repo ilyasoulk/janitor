@@ -15,12 +15,15 @@ self.addEventListener('install', () => {
     self.skipWaiting(); // Ensures the service worker activates immediately
 });
 
-// Context menu setup
+// Instead of creating the context menu on installation,
+// create it once but update its visibility based on messages from the content script
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: 'anonymizeSelection',
         title: 'Anonymize Selection',
         contexts: ['selection'],
+        visible: false, // Start with it hidden
     });
 });
 
@@ -68,14 +71,21 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
 });
 
-// Message handlers
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+// Listen for messages from content script about selection context
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'SELECTION_CONTEXT_UPDATE') 
+        // Update context menu visibility based on whether selection is in editable area
+        chrome.contextMenus.update('anonymizeSelection', {
+            visible: message.inEditableArea,
+        });
+    
+    
     // Handle direct text cleaning requests
-    if (request.type === 'CLEAN_TEXT') {
+    if (message.type === 'CLEAN_TEXT') {
         (async () => {
             try {
-                const cleanedText = await cleanPrompt(request.text, request.anonymizing);
-                sendResponse({ cleanedText, message: cleanedText === request.text ? 'Nothing to anonymize was found' : 'Text anonymized' });
+                const cleanedText = await cleanPrompt(message.text, message.anonymizing);
+                sendResponse({ cleanedText, message: cleanedText === message.text ? 'Nothing to anonymize was found' : 'Text anonymized' });
             }
             catch (error) { 
                 sendResponse({ error: error.message }); 
@@ -85,7 +95,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     
     // Handle anonymize selection requests from popup
-    if (request.action === 'ANONYMIZE_SELECTION') {
+    if (message.action === 'ANONYMIZE_SELECTION') {
         (async () => {
             try {
                 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });

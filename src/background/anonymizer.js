@@ -58,6 +58,8 @@ const isNonIntermediatePersonEntity = entityType => entityType.startsWith('I-') 
 
 // Text cleaning function
 export const cleanPrompt = async (text, anonymize = true) => {
+    console.log('[SkyShade] [BACKGROUND] Cleaning prompt:', text);
+
     const nerPipeline = await PipelineSingleton.getInstance();
     const entities = await nerPipeline(text); 
     const aggregatedEntities = aggregateEntities(entities);
@@ -101,11 +103,9 @@ export const cleanPrompt = async (text, anonymize = true) => {
     // Handle emails with regex
     const emailRegex = /([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})/g;
 
-
-    if (!anonymize) 
+    console.log('[SkyShade] [BACKGROUND] Anonymizing emails:', cleanedText);
+    if (anonymize) 
         return cleanedText.replace(emailRegex, '[EMAIL]');
-    
-
 
     return cleanedText.replace(emailRegex, (match, username) => {
         let changed = false;

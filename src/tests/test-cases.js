@@ -19,4 +19,7 @@ export const TEST_INPUTS = [
     'JOHN SMITH works at GOOGLE',
     'Tesla, founded by Elon Musk, is based in Palo Alto',
     "Dylan's office is near Lourmel station",
+
+    // Format cases
+    'This line is the first line. We will add a newline.\nThis line is the second line. The output should remain unchanged.',
 ];

@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "SkyShade - Text Anonymizer",
-    "version": "1.7",
-    "description": "Anonymizes selected text by replacing named entities with generic labels",
+    "version": "1.0.8",
+    "description": "SkyShade anonymizes sensitive text on webpages with a single click, removing names, locations, emails, and personal identifiers.",  
     "permissions": [
       "activeTab",
       "scripting",
