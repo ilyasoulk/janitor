@@ -142,6 +142,22 @@ function replaceSelectedText(selection, cleanedText) {
     }, 300); // 300ms = 0.3 seconds
 }
 
+
+function normalizeConsecutiveNewlines(text) {
+    if (!text.includes('\n')) return text;
+    
+    const totalNewlines = (text.match(/\n/g) || []).length;
+    const consecutivePairs = (text.match(/\n\n/g) || []).length;
+    
+    const allNewlinesAreConsecutive = (totalNewlines === consecutivePairs * 2);
+    
+    if (allNewlinesAreConsecutive && consecutivePairs > 0) 
+        return text.replace(/\n\n/g, '\n');
+    else
+        return text;
+}
+
+
 // Process text transformation (anonymization/pseudonymization)
 function processTextTransformation(command, sendResponse) {
     const selection = window.getSelection();
@@ -159,8 +175,11 @@ function processTextTransformation(command, sendResponse) {
         return sendResponse({ success: false, error: 'Selection is not in an editable area' });
 
 
-    const originalText = selection.toString();
-    console.log('[SkyShade] [CONTENT] Newlines replaced:', originalText.replace(/\n/g, '[NEWLINE]'));
+    let originalText = selection.toString();
+    console.log('[SkyShade] [CONTENT] Newlines before normalization:', originalText.replace(/\n/g, '[NEWLINE]'));
+    originalText = normalizeConsecutiveNewlines(originalText);
+    console.log('[SkyShade] [CONTENT] Newlines after normalization:', originalText.replace(/\n/g, '[NEWLINE]'));
+
     const isAnonymizing = command === 'anonymizeSelection';
     
     showLoadingIndicator(selection, isAnonymizing);
