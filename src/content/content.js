@@ -174,7 +174,6 @@ function processTextTransformation(command, sendResponse) {
     if (!isEditable) 
         return sendResponse({ success: false, error: 'Selection is not in an editable area' });
 
-
     let originalText = selection.toString();
     console.log('[SkyShade] [CONTENT] Newlines before normalization:', originalText.replace(/\n/g, '[NEWLINE]'));
     originalText = normalizeConsecutiveNewlines(originalText);
